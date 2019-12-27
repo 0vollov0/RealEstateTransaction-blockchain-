@@ -12,6 +12,8 @@
     "fs": "0.0.1-security",
     "node-json-rpc": "0.0.1",
     "request": "^2.88.0",
+    "solc": "^0.6.0",
+    "truffle-hdwallet-provider": "0.0.3",
     "web3": "^1.2.4"
   }
 }
