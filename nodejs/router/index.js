@@ -33,5 +33,6 @@ router.use('/js', express.static(__dirname + '../../node_modules/jquery/dist'));
 router.use('/js', express.static(__dirname + '../../js'));
 router.use('/css', express.static(__dirname + '../../node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
 router.use('/css', express.static(__dirname + '../../css'));
+router.use('/img', express.static(__dirname + '../../img'));
 
 module.exports = router;
