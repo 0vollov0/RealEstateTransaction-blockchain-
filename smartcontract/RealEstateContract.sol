@@ -8,6 +8,7 @@ contract RealEstateContract {
     }
 
     struct Info{
+        string _title;
         address _seller;
         address _buyer;
         string _latitudeLongitude;
@@ -51,6 +52,10 @@ contract RealEstateContract {
         return "";
     }
 
+    function getTitle() public view returns (string memory) {
+        return info._title;
+    }
+
     function getSellerAddress() public view returns (address) {
         return info._seller;
     }
@@ -74,6 +79,11 @@ contract RealEstateContract {
     function setValue(uint256 value) public onlyBuyer statusCompleted{
         info._value = value;
     }
+
+    function setTitle(string memory title) public onlySeller statusCompleted{
+        info._title = title;
+    }
+
 
     function getStatus() public view returns (string memory){
         if (Status.Trading == info._status) return "trading";
