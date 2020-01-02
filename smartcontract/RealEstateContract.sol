@@ -11,7 +11,7 @@ contract RealEstateContract {
         string _title;
         address _seller;
         address _buyer;
-        string _latitudeLongitude;
+        //string _latitudeLongitude;
         string _locationAddress;
         uint256 _value;
         Status _status;
@@ -23,7 +23,7 @@ contract RealEstateContract {
 
     constructor (address seller,string memory latitudeLongitude,string memory locationAddress,uint256 value) public {
         info._seller = seller;
-        info._latitudeLongitude = latitudeLongitude;
+        //info._latitudeLongitude = latitudeLongitude;
         info._locationAddress = locationAddress;
         info._value = value;
         info._status = Status.Trading;
@@ -64,9 +64,9 @@ contract RealEstateContract {
         return info._buyer;
     }
 
-    function getLatitudeLongitude() public view returns (string memory) {
-        return info._latitudeLongitude;
-    }
+    // function getLatitudeLongitude() public view returns (string memory) {
+    //     return info._latitudeLongitude;
+    // }
 
     function getLocationAddress() public view returns (string memory) {
         return info._locationAddress;
