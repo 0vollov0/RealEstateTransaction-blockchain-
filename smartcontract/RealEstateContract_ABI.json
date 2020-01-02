@@ -3,20 +3,6 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "setValue",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"name": "status",
 				"type": "uint8"
 			}
@@ -28,40 +14,45 @@
 		"type": "function"
 	},
 	{
+		"constant": true,
+		"inputs": [],
+		"name": "getValue",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
 		"inputs": [
-			{
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"name": "latitudeLongitude",
-				"type": "string"
-			},
-			{
-				"name": "locationAddress",
-				"type": "string"
-			},
 			{
 				"name": "value",
 				"type": "uint256"
 			}
 		],
+		"name": "setValue",
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getBuyerAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -72,16 +63,16 @@
 			{
 				"components": [
 					{
+						"name": "_title",
+						"type": "string"
+					},
+					{
 						"name": "_seller",
 						"type": "address"
 					},
 					{
 						"name": "_buyer",
 						"type": "address"
-					},
-					{
-						"name": "_latitudeLongitude",
-						"type": "string"
 					},
 					{
 						"name": "_locationAddress",
@@ -105,13 +96,27 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "title",
+				"type": "string"
+			}
+		],
+		"name": "setTitle",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
-		"name": "getLatitudeLongitude",
+		"name": "getSellerAddress",
 		"outputs": [
 			{
 				"name": "",
-				"type": "string"
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -135,7 +140,7 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "getSellerAddress",
+		"name": "getBuyerAddress",
 		"outputs": [
 			{
 				"name": "",
@@ -149,7 +154,7 @@
 	{
 		"constant": true,
 		"inputs": [],
-		"name": "getStatus",
+		"name": "getTitle",
 		"outputs": [
 			{
 				"name": "",
@@ -161,17 +166,22 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "getValue",
-		"outputs": [
+		"inputs": [
 			{
-				"name": "",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"name": "locationAddress",
+				"type": "string"
+			},
+			{
+				"name": "value",
 				"type": "uint256"
 			}
 		],
 		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	}
 ]

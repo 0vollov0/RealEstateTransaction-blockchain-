@@ -21,7 +21,8 @@ contract RealEstateContract {
 
     Info private info;
 
-    constructor (address seller,string memory latitudeLongitude,string memory locationAddress,uint256 value) public {
+    constructor (string memory title,address seller,string memory locationAddress,uint256 value) public {
+        info._title = title;
         info._seller = seller;
         //info._latitudeLongitude = latitudeLongitude;
         info._locationAddress = locationAddress;
