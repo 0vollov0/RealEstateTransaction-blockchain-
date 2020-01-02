@@ -27,6 +27,7 @@ const deploy = async () => {
     console.log('Contract deployed to', result.options.address); 
 };
 
+
 //deploy();
 //web3_ws.eth.getAccounts(console.log)
 //web3_truffle.eth.getAccounts(console.log)

@@ -2,18 +2,23 @@ var express = require('express')
 var router = express.Router()
 var mysql = require('mysql')
 const crypto = require('crypto')
+const request = require('request')
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 
+
+
 var connection = mysql.createConnection({
-    host    :   'localhost',
-    port    :   3306,
-    user    :   'root',
-    password:   'root',
-    database:   'realestatetransaction'
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: 'root',
+    database: 'realestatetransaction'
 });
 
 connection.connect();
+
+
 
 // passport.use(new LocalStrategy({
 //     usernameField: 'mb_id',
@@ -45,28 +50,58 @@ connection.connect();
 //     failureFlash: true }
 // ));
 
-router.post('/',(req,res) => {
+router.post('/', (req, res) => {
     var body = req.body;
     var mb_id = body.mb_id;
     var mb_pw = body.mb_pw;
+    var mb_account = body.mb_account;
+
     mb_pw = crypto.createHash('sha512').update(mb_pw).digest('hex');
 
-    var query_params = {'mb_id' : mb_id,'mb_pw' : mb_pw}
+    var query_params = {
+        'mb_id': mb_id,
+        'mb_pw': mb_pw
+    }
 
     var query = connection.query('INSERT INTO member SET ?', query_params, function (error, results, fields) {
         var result;
-        if (error) result = { 'result' : 1 , 'message' : '회원가입 실패' , 'error' : error}
-        else result = { 'result' : 0 , 'message' : '회원가입 성공'}
+        if (error) {
+            result = {
+                'result': 1,
+                'message': '회원가입 실패',
+                'error': error
+            }
+        } else {
+            request.post('http://localhost:8080/web3/personal_newAccount', {
+                json: {
+                    'params': mb_account
+                }
+              }, (error, res, body) => {
+                if (error) {
+                    console.error(error)
+                    return
+                }
+                body = JSON.parse(body);
+                connection.query('update member set mb_account = ? where mb_idx = ?',[body.result,results.insertId],(error,results,fileds) => {
+                    if(error) console.log(error)
+                    else console.log('계정 생성 완료')
+                })
+            })
+            result = {
+                'result': 0,
+                'message': '회원가입 성공'
+            }
+        }
         res.json(result)
     });
 
 })
 
 
-router.get('/',function(req,res){
+router.get('/', function (req, res) {
     var errMsg = req.flash('error')
     //if(errMsg) res.render('member/login.ejs',{'message' : errMsg});
-    if(req.user !== undefined) res.redirect('main');
+    if (req.user !== undefined) res.redirect('main');
     res.render('member/join.ejs');
 })
 

@@ -7,6 +7,7 @@ var LocalStrategy = require('passport-local').Strategy
 var session = require('express-session')
 var cookieSession = require('cookie-session');
 var flash = require('connect-flash')
+var path = require('path')
 
 
 app.listen(8080,function(){
@@ -16,6 +17,8 @@ app.listen(8080,function(){
 app.use(express.static('public'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
+
+app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
 
 app.use(session({

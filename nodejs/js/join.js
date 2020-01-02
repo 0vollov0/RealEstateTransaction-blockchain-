@@ -1,10 +1,12 @@
 document.getElementById('join').addEventListener('click', function () {
     var mb_id = document.getElementsByName('mb_id')[0].value;
     var mb_pw = document.getElementsByName('mb_pw')[0].value;
+    var mb_account = document.getElementsByName('mb_account')[0].value;
 
     var data = {
         'mb_id': mb_id,
-        'mb_pw': mb_pw
+        'mb_pw': mb_pw,
+        'mb_account':mb_account
     }
 
     sendAjax('http://localhost:8080/join', data);
