@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var mysql = require('mysql')
-const crypto = require('crypto')
+//const crypto = require('crypto')
 
 var connection = mysql.createConnection({
     host    :   'localhost',
