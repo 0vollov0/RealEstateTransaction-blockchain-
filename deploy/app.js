@@ -14,7 +14,6 @@ var job_coin_updaate = schedule.scheduleJob('0 0 0 * * *',() => {
     coin_update.crawling_coin_cost();
 })
 
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 

@@ -1,5 +1,8 @@
 // in node.js
 var Web3 = require('web3');
+var web3_ws = new Web3('ws://localhost:8545');
+web3_ws.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
+var web3_rpc = new Web3('http://localhost:8546');
 var rpc = require('node-json-rpc');
 const request = require('request');
 var fs = require('fs')
@@ -9,9 +12,6 @@ var ABI = require('./ABI.js')
 var mnemonic = "mountains supernatural bird..."; // 12 word mnemonic
 var provider = new HDWalletProvider(mnemonic, "http://localhost:8546");
 
-var web3_ws = new Web3('ws://localhost:8545');
-web3_ws.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
-var web3_rpc = new Web3('http://localhost:8546');
 
 var web3_truffle = new Web3(provider);
 
@@ -56,9 +56,9 @@ const deploy = async () => {
 // });
 
 
-web3_ws.eth.getCoinbase().then(function(coinbase){    
-    web3_rpc.eth.personal.unlockAccount(coinbase, "1", 600).then(console.log('Account unlocked!'))
-});
+// web3_ws.eth.getCoinbase().then(function(coinbase){    
+//     web3_rpc.eth.personal.unlockAccount(coinbase, "1", 600).then(console.log('Account unlocked!'))
+// });
 
 //let myContract = new web3_ws.eth.Contract(ABI.ABI, {from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc',  data: ABI.byte_code});
 // let myContract = new web3_ws.eth.Contract(ABI.ABI);

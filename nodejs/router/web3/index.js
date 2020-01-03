@@ -52,16 +52,19 @@ router.post('/personal_newAccount', (req, res) => {
     });
 })
 
-router.post('/deploy_realestate', (req, res) => {
-    var request_body = req.body;
-    console.log(request_body)
+router.get('/eth_pendingTransactions', (req, res) => {
     var options = {
-        url: "http://localhost:8082/deploy/RealEstateTransaction",
+        url: "http://localhost:8546",
         method: "post",
         headers: {
             "content-type": "application/json"
         },
-        body: JSON.stringify(request_body)
+        body: JSON.stringify({
+            "jsonrpc": "2.0",
+            "method": "eth_pendingTransactions",
+            "params": [],
+            "id": 1
+        })
     };
 
     request(options, (error, response, body) => {
@@ -69,8 +72,17 @@ router.post('/deploy_realestate', (req, res) => {
             res.json(error);
             console.error('An error has occurred: ', error);
         } else {
-            res.json(body);
-            console.log('Post successful: response: ', body);
+            var peding_transaction = new Array();
+
+            var result = JSON.parse(body).result;
+            for (let index = 0; index < result.length; index++) {
+                const element = result[index];
+                peding_transaction.push({
+                    'from': element.from,
+                    'hash': element.hash
+                })
+            }
+            res.json(peding_transaction);
         }
     });
 })
