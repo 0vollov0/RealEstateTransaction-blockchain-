@@ -13,6 +13,8 @@ contract RealEstateContract {
         address _buyer;
         //string _latitudeLongitude;
         string _locationAddress;
+        uint8 _cointType;
+        // 1 -> bitcoin 2 -> ethereum
         uint256 _value;
         Status _status;
     }
@@ -21,11 +23,12 @@ contract RealEstateContract {
 
     Info private info;
 
-    constructor (string memory title,address seller,string memory locationAddress,uint256 value) public {
+    constructor (string memory title,address seller,string memory locationAddress,uint8 coinType,uint256 value) public {
         info._title = title;
         info._seller = seller;
         //info._latitudeLongitude = latitudeLongitude;
         info._locationAddress = locationAddress;
+        info._cointType = coinType;
         info._value = value;
         info._status = Status.Trading;
         timestamp[statusToString(Status.Trading)] = now;
@@ -73,8 +76,16 @@ contract RealEstateContract {
         return info._locationAddress;
     }
 
+    function getCoinType() public view returns (uint8) {
+        return info._cointType;
+    }
+
     function getValue() public view returns (uint256) {
         return info._value;
+    }
+
+    function setCoinType(uint8 coinType) public onlyBuyer statusCompleted{
+        info._cointType = coinType;
     }
 
     function setValue(uint256 value) public onlyBuyer statusCompleted{

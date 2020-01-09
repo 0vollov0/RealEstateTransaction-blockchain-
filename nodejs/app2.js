@@ -15,50 +15,7 @@ var provider = new HDWalletProvider(mnemonic, "http://localhost:8546");
 
 var web3_truffle = new Web3(provider);
 
-const deploy = async () => {
-    accounts = await web3_truffle.eth.getAccounts(); 
-    console.log(accounts[0])
-    console.log('attempting to deploy from account',accounts[0]);
 
-    const result = await new web3_truffle.eth.Contract((ABI.ABI)) 
-      .deploy({data:ABI.byte_code, arguments:[accounts[0], 'My String2','My String2',18118]})     
-      .send({from: accounts[0], gas:'1000000'});                              
-
-    console.log('Contract deployed to', result.options.address); 
-};
-
-
-//deploy();
-//web3_ws.eth.getAccounts(console.log)
-//web3_truffle.eth.getAccounts(console.log)
-
-
-
-
-// let options = {
-//     url: "http://localhost:8546",
-//     method: "post",
-//     headers:
-//     { 
-//      "content-type": "application/json"
-//     },
-//     body: JSON.stringify({
-//         "jsonrpc":"2.0","method":"eth_accounts","params":[],"id":1
-//     })
-// };
-
-// request(options, (error, response, body) => {
-//     if (error) {
-//         console.error('An error has occurred: ', error);
-//     } else {
-//         console.log('Post successful: response: ', body);
-//     }
-// });
-
-
-// web3_ws.eth.getCoinbase().then(function(coinbase){    
-//     web3_rpc.eth.personal.unlockAccount(coinbase, "1", 600).then(console.log('Account unlocked!'))
-// });
 
 //let myContract = new web3_ws.eth.Contract(ABI.ABI, {from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc',  data: ABI.byte_code});
 // let myContract = new web3_ws.eth.Contract(ABI.ABI);
@@ -136,12 +93,34 @@ console.log(contract);
 */
 
 
-var contract = new web3_ws.eth.Contract(ABI.ABI,'0x52d5d750eb85fa50973f7319b03b85f27169dbc1');
-var status;
-contract.methods.getInfo().call().then((result) =>{
-    //status = result;
-    console.log(result)
+var myContract = new web3_ws.eth.Contract(ABI.ABI);
+//console.log(contract);
+//contract.methods.getTitle().call();
+// contract.methods.getInfo().call().then((result) =>{
+//     //status = result;
+//     console.log(result)
+// })
+// contract.methods.getTitle().call({from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc'}, function(error, result){
+//     console.log(result);
+// });
+myContract.deploy({
+    data: ABI.byte_code,
+    arguments: ['title', '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc','location',1200]
 })
+.send({
+    from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc',
+    gas: 1500000,
+    gasPrice: '0'
+}, function(error, transactionHash){  })
+.on('error', function(error){  })
+.on('transactionHash', function(transactionHash){  })
+.on('receipt', function(receipt){
+   console.log(receipt.contractAddress) // contains the new contract address
+})
+.on('confirmation', function(confirmationNumber, receipt){  })
+.then(function(newContractInstance){
+    console.log(newContractInstance.options.address) // instance with the new contract address
+});
 
 
 

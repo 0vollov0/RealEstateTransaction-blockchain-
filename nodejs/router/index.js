@@ -5,6 +5,7 @@ var path = require('path') //상대경로
 var join = require('./member/join')
 var login = require('./member/login')
 var logout = require('./member/logout')
+var coin = require('./coin/index')
 var realestateExchange = require('./realestateExchange/index')
 var web3 = require('./web3/index')
 
@@ -21,6 +22,7 @@ router.get('/', function (req, res) {
 router.use('/join', join)
 router.use('/login', login)
 router.use('/logout', logout)
+router.use('/coin', coin)
 router.use('/realestateExchange',realestateExchange)
 router.use('/web3',web3)
 

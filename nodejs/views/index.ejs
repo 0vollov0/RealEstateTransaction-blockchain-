@@ -34,14 +34,87 @@
                 <small>@blockchain 기술로 이루어 내는 부동산 거래 시스템</small>
             </div>
         </div>
+        <div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">암호화폐명</th>
+                        <th scope="col">금일 시세</th>
+                        <th scope="col">전일 시세</th>
+                    </tr>
+                </thead>
+                <tbody id="coin_info">
+                    <!-- <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
 
         <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
+            <h6 class="border-bottom border-gray pb-2 mb-0">판매중</h6>
             <div class="media text-muted pt-3">
                 <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
                     <title>Placeholder</title>
                     <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
+                        dy=".3em">32x32</text>
+                </svg>
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
+                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
+                        dy=".3em">32x32</text>
+                </svg>
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
+                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
+                        dy=".3em">32x32</text>
+                </svg>
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
+                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                </p>
+            </div>
+            <small class="d-block text-right mt-3">
+                <a href="#">All updates</a>
+            </small>
+        </div>
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0">거래완료</h6>
+            <div class="media text-muted pt-3">
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#e83e8c" /><text x="50%" y="50%" fill="#e83e8c"
                         dy=".3em">32x32</text>
                 </svg>
                 <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -67,7 +140,7 @@
                 <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
                     preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
                     <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#6f42c1" /><text x="50%" y="50%" fill="#6f42c1"
+                    <rect width="100%" height="100%" fill="#e83e8c" /><text x="50%" y="50%" fill="#e83e8c"
                         dy=".3em">32x32</text>
                 </svg>
                 <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -84,6 +157,38 @@
     </main>
     <input type="hidden" name="mb_id_session" value="<%=mb_id%>">
 </body>
+<script>
+    $(()=>{
+        getCoinInfo('http://localhost:8080/coin/info')
+    })
+
+    function getCoinInfo(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+
+        xhr.addEventListener('load', function () {
+            var result = JSON.parse(xhr.responseText);
+            var tbody = document.getElementById('coin_info');
+            result.forEach(element => {
+                var tr = document.createElement("tr");
+                var th = document.createElement("th");
+                th.className = 'row';
+                var td_1 = document.createElement("td");
+                var td_2 = document.createElement("td");
+
+                th.innerText = element.coin_name;
+                td_1.innerText = element.coin_today_value;
+                td_2.innerText = element.coin_yesterday_value;
+                tr.append(th);
+                tr.append(td_1);
+                tr.append(td_2);
+                tbody.append(tr);
+            });
+        })
+    }
+</script>
 <script src="/js/nav.js"></script>
 <script src="/js/nav_second.js"></script>
+
 </html>

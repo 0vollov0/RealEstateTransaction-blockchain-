@@ -1,0 +1,161 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" src="/img/blockchain.png" sizes="180x180">
+    <link rel="icon" src="/img/blockchain.png" sizes="32x32" type="image/png">
+    <link rel="icon" src="/img/blockchain.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="https://getbootstrap.com/docs/4.4/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="https://getbootstrap.com/docs/4.4/assets/img/favicons/safari-pinned-tab.svg"
+        color="#563d7c">
+    <link rel="icon" href="/img/blockchain.ico">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/offcanvas.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/offcanvas.js"></script>
+    <title>RealEstateTransaction</title>
+</head>
+
+<body>
+    <section id="nav"></section>
+    <section id="nav_second"></section>
+
+    <main role="main" class="container">
+        <hr>
+        <h2>거래중</h2>
+        <div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Contract Address</th>
+                        <th scope="col">Contract Transaction Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="trading">
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+        <h2>거래완료</h2>
+        <div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Contract Address</th>
+                        <th scope="col">Contract Transaction Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction_completed">
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+        <h2>대기중</h2>
+        <div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">From</th>
+                        <th scope="col">Contract Transaction Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="pending">
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <input type="hidden" name="mb_id_session" id="mb_id_session" value="<%=mb_id%>">
+    <input type="hidden" name="mb_account" id="mb_account" value="<%=mb_account%>">
+</body>
+<script>
+    $(() => {
+        //대기중 리스트
+        getPendingList();
+        //거래중 리스트
+        getList(1);
+        //거래완료 리스트
+        getList(2);
+    })
+
+    function getList(status) {
+        var url = 'http://localhost:8080/realestateExchange/realestate_list';
+        url = url + '?mb_id=' + document.getElementById('mb_id_session').value + '&status=' + status;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+
+        xhr.addEventListener('load', function () {
+            var result = JSON.parse(xhr.responseText);
+            var tbody;
+
+            switch (status) {
+                case 1:
+                    tbody = document.getElementById('trading');
+                    break;
+                case 2:
+                    tbody = document.getElementById('transaction_completed');
+                    break;
+                default:
+                    break;
+            }
+            result.data.forEach(element => {
+                var tr = document.createElement("tr");
+                var td_1 = document.createElement("td");
+                var td_2 = document.createElement("td");
+                td_1.innerText = element.realestate_ca;
+                td_2.innerText = element.realestate_ctx;
+                tr.append(td_1);
+                tr.append(td_2);
+                tbody.append(tr);
+            });
+
+            if (status == 0) {
+                result.forEach(element => {
+                    var tr = document.createElement("tr");
+                    var td_1 = document.createElement("td");
+                    var td_2 = document.createElement("td");
+                    td_1.innerText = element.from;
+                    td_2.innerText = element.hash;
+                    tr.append(td_1);
+                    tr.append(td_2);
+                    tbody.append(tr);
+                });
+            }
+        })
+    }
+
+    function getPendingList() {
+        var url = 'http://localhost:8080/web3/eth_pendingTransactions?account=' + document.getElementById('mb_account')
+            .value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+
+        xhr.addEventListener('load', function () {
+            var result = JSON.parse(xhr.responseText);
+            var tbody = document.getElementById('pending');
+            result.forEach(element => {
+                var tr = document.createElement("tr");
+                var td_1 = document.createElement("td");
+                var td_2 = document.createElement("td");
+                td_1.innerText = element.from;
+                td_2.innerText = element.hash;
+                tr.append(td_1);
+                tr.append(td_2);
+                tbody.append(tr);
+            });
+        })
+    }
+</script>
+<script src="/js/nav.js"></script>
+<script src="/js/nav_second.js"></script>
+
+</html>

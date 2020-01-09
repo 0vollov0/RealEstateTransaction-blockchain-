@@ -77,10 +77,12 @@ router.get('/eth_pendingTransactions', (req, res) => {
             var result = JSON.parse(body).result;
             for (let index = 0; index < result.length; index++) {
                 const element = result[index];
-                peding_transaction.push({
-                    'from': element.from,
-                    'hash': element.hash
-                })
+                if(req.query.account == element.from){
+                    peding_transaction.push({
+                        'from': element.from,
+                        'hash': element.hash
+                    })
+                }
             }
             res.json(peding_transaction);
         }

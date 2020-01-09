@@ -8,11 +8,18 @@ var session = require('express-session')
 var cookieSession = require('cookie-session');
 var flash = require('connect-flash')
 var path = require('path')
+const schedule = require('node-schedule')
+const coin_update = require('./custom_modules/coin_update')
 
 
 app.listen(8080,function(){
     console.log('localhost:8080 has been started');
 });
+
+// 매일 자정에 코인 정보 업데이트
+var job_coin_updaate = schedule.scheduleJob('0 0 0 * * *',() => {
+    coin_update.crawling_coin_cost();
+})
 
 app.use(express.static('public'))
 app.use(bodyParser.json())

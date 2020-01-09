@@ -38,7 +38,8 @@
 
                     <div class="mb-3">
                         <label for="address">Seller</label>
-                        <input type="text" class="form-control" id="seller" name="seller" placeholder="Seller" required value="<%=mb_account%>" readonly>
+                        <input type="text" class="form-control" id="seller" name="seller" placeholder="Seller" required
+                            value="<%=mb_account%>" readonly>
                         <div class="invalid-feedback">
                             This is your address for blockchain.
                         </div>
@@ -58,31 +59,39 @@
                         </div>
                         <div id="map" style="width:100%;height:400px;margin-top:10px;display:none"></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="address">Value</label>
-                        <input type="number" class="form-control" id="value" name="value" placeholder="Value" required>
-                        <div class="invalid-feedback">
-                            This is value for your realestate.
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="CoinType">CoinType</label>
+                            <select class="custom-select d-block w-100" name="coin_type" id="coin_type" required>
+                                <option value="1">Bitcoin</option>
+                                <option value="2">Ethereum</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="value">Value</label>
+                            <input type="number" class="form-control" id="value" name="value" placeholder="Value"
+                                required>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="address">Blockchain Account Password</label>
-                        <input type="text" class="form-control" id="account_password" name="account_password" placeholder="Blockchain Account Password" required>
+                        <input type="text" class="form-control" id="account_password" name="account_password"
+                            placeholder="Blockchain Account Password" required>
                         <div class="invalid-feedback">
                             This is value for your realestate.
                         </div>
                     </div>
 
                     <hr class="mb-4">
-
+                    <div class="alert alert-warning" role="alert" hidden=true></div>
                     <button class="btn btn-primary btn-lg btn-block" type="button" id="register">register</button>
                 </form>
             </div>
         </div>
     </div>
-    <input type="hidden" name="mb_id_session" value="<%=mb_id%>">
+    <input type="hidden" name="mb_id_session" id="mb_id_session" value="<%=mb_id%>">
+    <input type="hidden" name="mb_account" id="mb_account" value="<%=mb_account%>">
 </body>
 <script src="/js/nav.js"></script>
 <script src="/js/nav_second.js"></script>
@@ -95,8 +104,9 @@
             'title': document.getElementById('title').value,
             'seller': document.getElementById('seller').value,
             'locationAddress': document.getElementById('locationAddress').value,
+            'coin_type': document.getElementById('coin_type').value,
             'value': document.getElementById('value').value,
-            'account_password' : document.getElementById('account_password').value
+            'account_password': document.getElementById('account_password').value
         }
         sendAjax('http://localhost:8080/realestateExchange/registration', data);
     })
@@ -111,10 +121,22 @@
         xhr.send(data);
 
         xhr.addEventListener('load', function () {
-            // var result = JSON.parse(xhr.responseText);
-            // if (result.result === 0) window.location.href = '/';
-            // showResult(result.result, result.message);
+            var result = JSON.parse(xhr.responseText);
+            if (result.result === -1) window.location.href = '/';
+            showResult(result.result, result.message);
         })
+    }
+
+    function showResult(result, message) {
+        var alert = document.getElementsByClassName('alert');
+
+        for (let index = 0; index < alert.length; index++) {
+            const element = alert[index];
+            element.hidden = true;
+        }
+
+        alert[result].hidden = false;
+        alert[result].innerText = message;
     }
 </script>
 
