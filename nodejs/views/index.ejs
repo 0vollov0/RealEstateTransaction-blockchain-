@@ -44,65 +44,24 @@
                     </tr>
                 </thead>
                 <tbody id="coin_info">
-                    <!-- <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                    </tr> -->
                 </tbody>
             </table>
         </div>
 
         <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h6 class="border-bottom border-gray pb-2 mb-0">판매중</h6>
-            <div class="media text-muted pt-3">
-                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
-                        dy=".3em">32x32</text>
-                </svg>
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
-            </div>
-            <div class="media text-muted pt-3">
-                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
-                        dy=".3em">32x32</text>
-                </svg>
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
-            </div>
-            <div class="media text-muted pt-3">
-                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#007bff" /><text x="50%" y="50%" fill="#007bff"
-                        dy=".3em">32x32</text>
-                </svg>
-                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@username</strong>
-                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor
-                    mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                </p>
+            <h6 class="border-bottom border-gray pb-2 mb-0">거래중</h6>
+            <div>
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Seller</th>
+                            <th scope="col">Contract Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trading">
+                    </tbody>
+                </table>
             </div>
             <small class="d-block text-right mt-3">
                 <a href="#">All updates</a>
@@ -158,9 +117,56 @@
     <input type="hidden" name="mb_id_session" value="<%=mb_id%>">
 </body>
 <script>
-    $(()=>{
+    $(() => {
         getCoinInfo('http://localhost:8080/coin/info')
+        getSellerAndCA(0).then((list) => {
+            setList(0, list);
+        });
     })
+
+    function getSellerAndCA(status) {
+        var url = 'http://localhost:8080/realestateExchange/realestate_list?status=' + status;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.send();
+        return new Promise((resolve, reject) => {
+            xhr.addEventListener('load', function () {
+                var result = JSON.parse(xhr.responseText);
+                resolve(result);
+            })
+        })
+    }
+
+    function setList(status, list) {
+        list.data.forEach(element => {
+            var url = 'http://localhost:8080/realestateExchange/title?contract_address=' + element.realestate_ca;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.send();
+            xhr.addEventListener('load', function () {
+                var result = JSON.parse(xhr.responseText);
+                var tbody = document.getElementById('trading');
+                var tr = document.createElement("tr");
+                var td_1 = document.createElement("td");
+                var td_2 = document.createElement("td");
+                var td_3 = document.createElement("td");
+                var a = document.createElement("a");
+                a.href = '/realestateExchange/detail?contract_address=' + element.realestate_ca;
+
+                //td_1.innerText = result.title;
+                a.innerText = result.title;
+                td_2.innerText = element.realestate_seller;
+                td_3.innerText = element.realestate_ca;
+                td_1.append(a);
+                tr.append(td_1);
+                tr.append(td_2);
+                tr.append(td_3);
+                tbody.append(tr);
+            })
+
+        });
+
+    }
 
     function getCoinInfo(url) {
         var xhr = new XMLHttpRequest();
@@ -172,8 +178,7 @@
             var tbody = document.getElementById('coin_info');
             result.forEach(element => {
                 var tr = document.createElement("tr");
-                var th = document.createElement("th");
-                th.className = 'row';
+                var th = document.createElement("td");
                 var td_1 = document.createElement("td");
                 var td_2 = document.createElement("td");
 

@@ -11,11 +11,10 @@ contract RealEstateContract {
         string _title;
         address _seller;
         address _buyer;
-        //string _latitudeLongitude;
         string _locationAddress;
         uint8 _cointType;
         // 1 -> bitcoin 2 -> ethereum
-        uint256 _value;
+        uint256 _price;
         Status _status;
     }
     
@@ -23,13 +22,12 @@ contract RealEstateContract {
 
     Info private info;
 
-    constructor (string memory title,address seller,string memory locationAddress,uint8 coinType,uint256 value) public {
+    constructor (string memory title,address seller,string memory locationAddress,uint8 coinType,uint256 price) public {
         info._title = title;
         info._seller = seller;
-        //info._latitudeLongitude = latitudeLongitude;
         info._locationAddress = locationAddress;
         info._cointType = coinType;
-        info._value = value;
+        info._price = price;
         info._status = Status.Trading;
         timestamp[statusToString(Status.Trading)] = now;
     }
@@ -46,6 +44,11 @@ contract RealEstateContract {
 
     modifier statusCompleted(){
         require(info._status != Status.Complete);
+        _;
+    }
+
+    modifier statusTerminated(){
+        require(info._status != Status.Terminated);
         _;
     }
 
@@ -68,10 +71,6 @@ contract RealEstateContract {
         return info._buyer;
     }
 
-    // function getLatitudeLongitude() public view returns (string memory) {
-    //     return info._latitudeLongitude;
-    // }
-
     function getLocationAddress() public view returns (string memory) {
         return info._locationAddress;
     }
@@ -80,19 +79,19 @@ contract RealEstateContract {
         return info._cointType;
     }
 
-    function getValue() public view returns (uint256) {
-        return info._value;
+    function getPrice() public view returns (uint256) {
+        return info._price;
     }
 
-    function setCoinType(uint8 coinType) public onlyBuyer statusCompleted{
+    function setCoinType(uint8 coinType) public onlySeller statusCompleted statusTerminated{
         info._cointType = coinType;
     }
 
-    function setValue(uint256 value) public onlyBuyer statusCompleted{
-        info._value = value;
+    function setPrice(uint256 price) public onlySeller statusCompleted statusTerminated{
+        info._price = price;
     }
 
-    function setTitle(string memory title) public onlySeller statusCompleted{
+    function setTitle(string memory title) public onlySeller statusCompleted statusTerminated{
         info._title = title;
     }
 
@@ -108,10 +107,22 @@ contract RealEstateContract {
         return info;
     }
 
+    function getTimestamp(string memory status) public view returns (uint256) {
+        return timestamp[status];
+    }
+
     function updateStatus(uint8 status) public statusCompleted {
         if(status == 0) info._status = Status.Trading;
         if(status == 1) info._status = Status.Complete;
         if(status == 2) info._status = Status.Terminated;
+    }
+
+    function purchase(uint256 price,address buyer) public statusCompleted statusTerminated{
+        if(info._price <= price){
+          info._buyer = buyer;
+          info._status = Status.Complete;
+          timestamp[statusToString(Status.Complete)] = now;
+        } 
     }
 
 }

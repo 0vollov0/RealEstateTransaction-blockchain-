@@ -86,7 +86,7 @@
     })
 
     function getList(status) {
-        var url = 'http://localhost:8080/realestateExchange/realestate_list';
+        var url = 'http://localhost:8080/realestateExchange/my_realestate_list';
         url = url + '?mb_id=' + document.getElementById('mb_id_session').value + '&status=' + status;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url);

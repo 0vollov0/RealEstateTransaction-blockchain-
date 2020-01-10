@@ -68,8 +68,8 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="value">Value</label>
-                            <input type="number" class="form-control" id="value" name="value" placeholder="Value"
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" name="price" placeholder="Value"
                                 required>
                         </div>
                     </div>
@@ -105,14 +105,13 @@
             'seller': document.getElementById('seller').value,
             'locationAddress': document.getElementById('locationAddress').value,
             'coin_type': document.getElementById('coin_type').value,
-            'value': document.getElementById('value').value,
+            'price': document.getElementById('price').value,
             'account_password': document.getElementById('account_password').value
         }
         sendAjax('http://localhost:8080/realestateExchange/registration', data);
     })
 
     function sendAjax(url, data) {
-        console.log(data)
         data = JSON.stringify(data);
 
         var xhr = new XMLHttpRequest();
