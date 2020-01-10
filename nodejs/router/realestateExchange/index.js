@@ -39,11 +39,38 @@ router.get('/list', (req, res) => {
 router.get('/detail', (req, res) => {
     var mb_id = req.user;
     var contract_address = req.query.contract_address;
-    contract.getInfo(contract_address).then((info)=>{
+    contract.getInfo(contract_address).then((info) => {
         if (mb_id !== undefined) info.mb_id = mb_id;
         else info.mb_id = '';
-        res.render('realestateExchange/transactionDetail.ejs',info);
-    }).catch((error)=>{
+        var status = '';
+
+        switch (info.status) {
+            case '0':
+                status = 'trading';
+                info.status = '판매중';
+                break;
+            case '1':
+                status = 'complete';
+                info.status = '거래완료';
+                break;
+            case '2':
+                status = 'terminated';
+                info.status = '판매중지';
+                break;
+            default:
+                status = 'trading';
+                info.status = '판매중';
+                break;
+        }
+
+        contract.getTimestamp(contract_address,status).then((timestamp) => {
+            info.timestamp = timestamp;
+            res.render('realestateExchange/transactionDetail.ejs', info);
+        }).catch((error) => {
+            res.render('realestateExchange/transactionDetail.ejs', info);
+        })
+
+    }).catch((error) => {
         res.redirect('/');
     })
 })
@@ -82,17 +109,21 @@ router.get('/realestate_list', (req, res) => {
         result.result = -1;
         result.data = rows;
         res.json(result);
-    })    
+    })
 })
 
-router.get('/title',(req, res) => {
+router.get('/title', (req, res) => {
     var contract_address = req.query.contract_address;
     if (contract_address) {
-        contract.getTitle(contract_address).then((title)=>{
-            res.json({'title':title});
+        contract.getTitle(contract_address).then((title) => {
+            res.json({
+                'title': title
+            });
         }).catch(console.log)
-    }else{
-        res.json({'title':''});
+    } else {
+        res.json({
+            'title': ''
+        });
     }
 })
 

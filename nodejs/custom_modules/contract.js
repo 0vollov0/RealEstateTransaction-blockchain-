@@ -37,7 +37,22 @@ function getTitle(contract_address){
     })
 }
 
+function getTimestamp(contract_address,status){
+    var contract = new web3_ws.eth.Contract(compile_data.ABI, contract_address);
+    return new Promise((resolve,reject)=>{
+        contract.methods.getTimestamp(status).call({
+            from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc'
+        }, function (error, result) {
+            if (error) reject(error);
+            resolve(result);
+        });
+    })
+}
+
+getTimestamp('0x05cFFFC240EaF43e87560d8b61e8414FA0650257','trading').then(console.log);
+
 module.exports = {
     getInfo : getInfo,
-    getTitle : getTitle
+    getTitle : getTitle,
+    getTimestamp : getTimestamp
 }

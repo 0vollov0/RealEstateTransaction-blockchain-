@@ -60,6 +60,10 @@
                     </td>
                 </tr>
                 <tr>
+                    <th scope="row">Timestamp : </th>
+                    <td id="timestamp"><%=timestamp%></td>
+                </tr>
+                <tr>
                     <th scope="row">Status : </th>
                     <td id="status"><%=status%></td>
                 </tr>
@@ -79,22 +83,23 @@
 </script>
 <script>
     $(() => {
-        var status = document.getElementById('status').innerText;
+        document.getElementById('timestamp').innerText = getTimestampToDate(document.getElementById('timestamp').innerText);
+        //var status = document.getElementById('status').innerText;
         var locationAddress = document.getElementById('locationAddress').value;
-        switch (status) {
-            case '0':
-                document.getElementById('status').innerText = '판매중';
-                break;
-            case '1':
-                document.getElementById('status').innerText = '거래완료';
-                break;
-            case '2':
-                document.getElementById('status').innerText = '판매중지';
-                break;
+        // switch (status) {
+        //     case '0':
+        //         document.getElementById('status').innerText = '판매중';
+        //         break;
+        //     case '1':
+        //         document.getElementById('status').innerText = '거래완료';
+        //         break;
+        //     case '2':
+        //         document.getElementById('status').innerText = '판매중지';
+        //         break;
 
-            default:
-                break;
-        }
+        //     default:
+        //         break;
+        // }
 
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
             mapOption = {
@@ -133,6 +138,21 @@
             }
         });
     })
+
+    function getTimestampToDate(timestamp) {
+        var date = new Date(timestamp * 1000);
+        var chgTimestamp = date.getFullYear().toString() + '-' +
+            +addZero(date.getMonth() + 1) + '-' +
+            addZero(date.getDate().toString()) + ' ' +
+            addZero(date.getHours().toString()) + ':' +
+            addZero(date.getMinutes().toString()) + ':' +
+            addZero(date.getSeconds().toString());
+        return chgTimestamp;
+    }
+
+    function addZero(data) {
+        return (data < 10) ? "0" + data : data;
+    }
 </script>
 
 </html>
