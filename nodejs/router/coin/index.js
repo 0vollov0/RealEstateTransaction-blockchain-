@@ -1,6 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var mysql = require('mysql')
+var coin_contract = require('../../custom_modules/coin_contract')
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -25,6 +26,19 @@ router.get('/info', (req, res) => {
             })
         });
         res.json(info)
+    })
+})
+
+router.post('/charge', (req,res) =>{
+    var recipient = req.body.recipient;
+    var amount = Number(req.body.amount);
+    var coin_type = req.body.coin_type;
+
+    coin_contract.transfer(recipient,amount,coin_type).then((result)=>{
+        if (result) res.json({'result': true,'coin_type' : coin_type})
+    }).catch((error) => {
+        console.log(error);
+        res.redirect('/');
     })
 })
 
