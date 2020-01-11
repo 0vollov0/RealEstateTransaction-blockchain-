@@ -139,6 +139,7 @@
 
     function setList(status, list) {
         list.data.forEach(element => {
+            console.log(element.realestate_ca);
             var url = 'http://localhost:8080/realestateExchange/title?contract_address=' + element.realestate_ca;
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url);

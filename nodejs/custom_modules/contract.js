@@ -19,7 +19,6 @@ function getInfo(contract_address) {
                 'price' : result._price,
                 'status' : result._status,
             }
-            console.log(data);
             resolve(data);
         });
     })

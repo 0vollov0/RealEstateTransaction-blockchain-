@@ -7,7 +7,7 @@ document.getElementById('login').addEventListener('click', function () {
         'mb_pw': mb_pw
     }
 
-    sendAjax('http://localhost:8080/login', data);
+    sendAjax('http://localhost:8080/member/login', data);
 })
 
 function sendAjax(url, data) {

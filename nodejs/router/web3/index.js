@@ -5,7 +5,7 @@ var rpc = require('node-json-rpc');
 const request = require('request');
 var fs = require('fs')
 var HDWalletProvider = require('truffle-hdwallet-provider');
-var ABI = require('../../ABI.js')
+// var ABI = require('../../ABI.js')
 
 var web3_ws = new Web3('ws://localhost:8545');
 web3_ws.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8545'));

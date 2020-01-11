@@ -9,7 +9,7 @@ document.getElementById('join').addEventListener('click', function () {
         'mb_account':mb_account
     }
 
-    sendAjax('http://localhost:8080/join', data);
+    sendAjax('http://localhost:8080/member/join', data);
 })
 
 function sendAjax(url, data) {
