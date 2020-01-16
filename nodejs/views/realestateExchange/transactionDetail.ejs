@@ -189,6 +189,16 @@
                 window.location.href = '/realestateExchange/modify?'+param;
             })
         }
+
+        if (document.getElementById('stop')) {
+            document.getElementById('stop').addEventListener('click',()=>{
+                var data = {
+                    'contract_address' : document.getElementById('contract_address').value,
+                    'status' : 2
+                };
+                sendAjax('/realestateExchange/status',data);
+            })
+        }
     })
 
     function getTimestampToDate(timestamp) {
@@ -279,8 +289,8 @@
 
         xhr.addEventListener('load', function () {
             var result = JSON.parse(xhr.responseText);
-            if (result.result === 0) window.location.href = '/';
-            showResult(result.result, result.message);
+            if (result.result == true) window.location.href='/'
+
         })
     }
 </script>

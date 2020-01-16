@@ -77,11 +77,14 @@ function purchase(contract_address,price,buyer){
 function updateStatus(contract_address,status){
     var contract = new web3_ws.eth.Contract(compile_data.ABI, contract_address);
     return new Promise((resolve, reject) => {
-        contract.methods.updateStatus(status).send({
+        contract.methods.updateStatus(Number(status)).send({
             from: '0xdd4c3bd95e204ebe5d086f38f4ecadeac7379dbc'
         }, function (error, result) {
             if (error) reject(error);
-            resolve(result);
+            connection.query('update realestate set realestate_status = 2 where realestate_ca = ?',[contract_address], (err, rows) => {
+                if (err) reject(err)
+                resolve(result);
+            })
         })
     })
 }
@@ -99,8 +102,6 @@ function modify(contract_address,seller,account_password,title,locationAddress,c
         })
     })
 }
-
-//updateStatus('0x357e4f4f4A010e38150417158C9E0d4DaDDc5e0c',3).then(console.log);
 
 module.exports = {
     getInfo : getInfo,

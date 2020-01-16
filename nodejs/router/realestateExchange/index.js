@@ -262,8 +262,6 @@ router.get('/modify', (req, res) => {
 router.post('/modify', (req, res) => {
     var body = req.body;
     var result = {};
-
-    console.log(body);
     contract.modify(body.contract_address,body.seller, body.account_password,  body.title, body.locationAddress, body.coinType,body.price).then((transactionHash) => {
         result.result = -1;
         result.realestate_ctx = transactionHash;
@@ -271,6 +269,19 @@ router.post('/modify', (req, res) => {
     }).catch(() => {
         result.result = 0;
         result.message = '블록체인 계정 비밀번호 오류';
+        res.json(result);
+    })
+})
+
+router.post('/status',(req,res)=>{
+    var body = req.body;
+    var result = {};
+
+    contract.updateStatus(body.contract_address,body.status).then(()=>{
+        result.result = true;
+        res.json(result);
+    }).catch((err)=>{
+        result.result = false;
         res.json(result);
     })
 })
