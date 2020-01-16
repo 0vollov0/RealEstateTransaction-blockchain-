@@ -40,8 +40,8 @@
                     <td><%=mb_account%></td>
                 </tr>
                 <tr>
-                    <th scope="row">Bitcoin : </th>
-                    <td><%=bit%> bit</td>
+                    <th scope="row">btccoin : </th>
+                    <td><%=btc%> btc</td>
                 </tr>
                 <tr>
                     <th scope="row">Ethereum : </th>
@@ -52,16 +52,16 @@
         <hr>
         <div class="input-group mb-3">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-warning bit" onclick="addBitAmount(1)">1 Bit</button>
-                <button type="button" class="btn btn-warning bit" onclick="addBitAmount(10)">10 Bit</button>
-                <button type="button" class="btn btn-warning bit" onclick="addBitAmount(100)">100 Bit</button>
+                <button type="button" class="btn btn-warning btc" onclick="addBtcAmount(1)">1 BTC</button>
+                <button type="button" class="btn btn-warning btc" onclick="addBtcAmount(10)">10 BTC</button>
+                <button type="button" class="btn btn-warning btc" onclick="addBtcAmount(100)">100 BTC</button>
             </div>
-            <input type="number" id="bit_amount" class="form-control" placeholder="0" aria-label="0"
+            <input type="number" id="btc_amount" class="form-control" placeholder="0" aria-label="0"
                 aria-describedby="button-addon2" readonly>
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="charge_bit">충전 요청</button>
+                <button class="btn btn-outline-secondary" type="button" id="charge_btc">충전 요청</button>
                 <button class="btn btn-outline-secondary" type="button" id="button-addon2"
-                    onclick="initBitAmount()">초기화</button>
+                    onclick="initBtcAmount()">초기화</button>
             </div>
         </div>
         <hr>
@@ -79,7 +79,7 @@
                     onclick="initEthAmount()">초기화</button>
             </div>
         </div>
-        <div class="alert alert-warning" role="alert" hidden=true>Bit 충전 요청 완료(1~5분 소요 예상)</div>
+        <div class="alert alert-warning" role="alert" hidden=true>btc 충전 요청 완료(1~5분 소요 예상)</div>
         <div class="alert alert-primary" role="alert" hidden=true>Ethereum 충전 요청 완료(1~5분 소요 예상)</div>
     </main>
     <input type="hidden" name="mb_id_session" id="mb_id_session" value="<%=mb_id%>">
@@ -91,16 +91,16 @@
 <script src="/js/nav.js"></script>
 <script src="/js/nav_second.js"></script>
 <script>
-    function addBitAmount(amount) {
-        document.getElementById('bit_amount').value = Number(document.getElementById('bit_amount').value) + amount;
+    function addBtcAmount(amount) {
+        document.getElementById('btc_amount').value = Number(document.getElementById('btc_amount').value) + amount;
     }
 
     function addEthAmount(amount) {
         document.getElementById('eth_amount').value = Number(document.getElementById('eth_amount').value) + amount;
     }
 
-    function initBitAmount() {
-        document.getElementById('bit_amount').value = 0;
+    function initBtcAmount() {
+        document.getElementById('btc_amount').value = 0;
     }
 
     function initEthAmount() {
@@ -121,10 +121,10 @@
         document.getElementById('eth_amount').value = '';
     })
 
-    document.getElementById('charge_bit').addEventListener('click', () => {
+    document.getElementById('charge_btc').addEventListener('click', () => {
         var data = {
             'recipient': document.getElementById('mb_account').value,
-            'amount': document.getElementById('bit_amount').value,
+            'amount': document.getElementById('btc_amount').value,
             'coin_type': '1'
         };
 
@@ -132,7 +132,7 @@
 
         sendAjax(url, data);
 
-        document.getElementById('bit_amount').value = '';
+        document.getElementById('btc_amount').value = '';
     })
 
     function sendAjax(url, data) {

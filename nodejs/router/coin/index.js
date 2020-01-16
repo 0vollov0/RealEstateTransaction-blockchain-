@@ -29,6 +29,33 @@ router.get('/info', (req, res) => {
     })
 })
 
+router.get('/balanceOf',(req,res)=>{
+    var data = {};
+    var mb_id = req.user;
+    var coin_type = req.query.coin_type;
+    if (mb_id !== undefined) {
+        connection.query('select mb_account from member where mb_id = ?', [mb_id], (err, rows) => {
+            if (err) res.json({'result': false});
+            if (rows[0].mb_account == null) res.json({'result': false});
+            data.mb_id = mb_id;
+            data.mb_account = rows[0].mb_account;
+            coin_contract.balanceOf(data.mb_account,coin_type).then((amount)=>{
+                if (amount){
+                    if (coin_type == '1') {
+                        data.btc = amount;
+                    }else if (coin_type == '2') {
+                        data.eth = amount;
+                    }
+                    data.result = true;
+                    res.json(data);
+                }
+            }).catch((error)=>{
+                res.json({'result':false})
+            })
+        })
+    }else res.json({'result':false})
+})
+
 router.post('/charge', (req,res) =>{
     var recipient = req.body.recipient;
     var amount = Number(req.body.amount);

@@ -36,10 +36,9 @@ function miner_stop() {
         })
     };
 
-    request(options, (error, response, body) => {
+    request(options, (error, res, body) => {
         if (error) {
             res.json(error);
-            console.error('An error has occurred: ', error);
         } else {
 
         }

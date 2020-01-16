@@ -37,18 +37,28 @@
                 </tr>
                 <tr>
                     <th scope="row">Seller : </th>
-                    <td><%=seller%></td>
+                    <td id="seller"><%=seller%></td>
                 </tr>
+                <%
+                    if (status == '거래완료') {
+                %>
+                    <tr>
+                        <th scope="row">Buyer : </th>
+                        <td id="buyer"><%=buyer%></td>
+                    </tr>
+                <%                            
+                    }
+                %>
                 <tr>
                     <th scope="row">Price : </th>
                     <%
-                        if (cointType == 1) {
+                        if (coinType == 1) {
                     %>
-                    <td><%=price%> BIT</td>
+                    <td id="coin_type" class="btc"><%=price%> BTC</td>
                     <%                            
                         }else{
                     %>
-                    <td><%=price%> ETH</td>
+                    <td id="coin_type" class="eth"><%=price%> ETH</td>
                     <%
                     }
                     %>
@@ -69,9 +79,26 @@
                 </tr>
             </tbody>
         </table>
+        <%
+            if (Number(seller) == Number(mb_account) && status == '판매중') {
+        %>
+            <button type="button" id="modify" class="btn btn-warning">수정</button>
+            <button type="button" id="stop" class="btn btn-danger">판매중지</button>
+        <%
+            } else if (status == '판매중') {
+        %>
+            <button type="button" id="purchase" class="btn btn-success">구매</button>
+        <%                
+            }
+        %>
     </main>
     <input type="hidden" name="mb_id_session" id="mb_id_session" value="<%=mb_id%>">
+    <input type="hidden" name="title" id="title" value="<%=title%>">
     <input type="hidden" name="locationAddress" id="locationAddress" value="<%=locationAddress%>">
+    <input type="hidden" name="contract_address" id="contract_address" value="<%=contract_address%>">
+    <input type="hidden" name="coinType" id="coinType" value="<%=coinType%>">
+    <input type="hidden" name="price" id="price" value="<%=price%>">
+    <input type="hidden" name="status" id="status" value="<%=status%>">
 </body>
 <script>
 
@@ -83,7 +110,8 @@
 </script>
 <script>
     $(() => {
-        document.getElementById('timestamp').innerText = getTimestampToDate(document.getElementById('timestamp').innerText);
+        document.getElementById('timestamp').innerText = getTimestampToDate(document.getElementById('timestamp')
+            .innerText);
         //var status = document.getElementById('status').innerText;
         var locationAddress = document.getElementById('locationAddress').value;
         // switch (status) {
@@ -137,6 +165,30 @@
                 map.setCenter(coords);
             }
         });
+
+        //구매 버튼
+        if (document.getElementById('purchase')) {
+            document.getElementById('purchase').addEventListener('click', () => {
+                if (document.getElementById('mb_id_session').value == '' || document.getElementById('mb_id_session').value.length < 1) {
+                    if (confirm('로그인이 필요 합니다. 로그인 하시겠습니까?')) window.location.href = '/member/login'
+                }else if (confirm('구매 하시 겠습니까?')) purchase();
+            })
+        }
+
+        //수정 버튼
+        if (document.getElementById('modify')) {
+            document.getElementById('modify').addEventListener('click',()=>{
+                var contract_address = document.getElementById('contract_address').value;
+                var title = document.getElementById('title').value;
+                var seller = document.getElementById('seller').innerText;
+                var coinType = document.getElementById('coinType').value;
+                var price = document.getElementById('price').value;
+                var locationAddress = document.getElementById('locationAddress').value;
+                var param ='contract_address='+contract_address +'&title=' + title + '&seller='+ seller +'&coinType='+coinType + '&price='+ price + '&locationAddress='+ locationAddress;
+
+                window.location.href = '/realestateExchange/modify?'+param;
+            })
+        }
     })
 
     function getTimestampToDate(timestamp) {
@@ -152,6 +204,84 @@
 
     function addZero(data) {
         return (data < 10) ? "0" + data : data;
+    }
+
+    function purchase() {
+        var data = {};
+        var coin_type = document.getElementById('coin_type').className;
+
+        switch (coin_type) {
+            case 'btc':
+                coin_type = 1;
+                break;
+            case 'eth':
+                coin_type = 2;
+                break;
+            default:
+                coin_type = 1;
+                break;
+        }
+        getCoinBalance(coin_type).then((result) => {
+            if (coin_type == 1) {
+                if (Number(result.btc) < Number(document.getElementById('price').value)) {
+                    alert('비트코인이 부족 합니다.');
+                    return;
+                }
+            } else if (coin_type == 2) {
+                if (Number(result.eth) < Number(document.getElementById('price').value)) {
+                    alert('이더리움이 부족 합니다.');
+                    return;
+                }
+            } else {
+                alert('알 수 없는 오류');
+            }
+            data.contract_address = document.getElementById('contract_address').value;
+            data.seller = document.getElementById('seller').innerText;
+            data.buyer = result.mb_account;
+            data.price = document.getElementById('price').value;
+            data.coin_type = coin_type;
+            data = JSON.stringify(data);
+            var url = 'http://localhost:8080/realestateExchange/purchase';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(data);
+
+            xhr.addEventListener('load', function () {
+                var result = JSON.parse(xhr.responseText);
+                console.log(result);
+            })
+        })
+
+    }
+
+    function getCoinBalance(coin_type) {
+        return new Promise((resolve, reject) => {
+            var url = 'http://localhost:8080/coin/balanceOf?coin_type=' + coin_type;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.send();
+
+            xhr.addEventListener('load', function () {
+                var result = JSON.parse(xhr.responseText);
+                resolve(result);
+            })
+        })
+    }
+
+    function sendAjax(url, data) {
+        data = JSON.stringify(data);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(data);
+
+        xhr.addEventListener('load', function () {
+            var result = JSON.parse(xhr.responseText);
+            if (result.result === 0) window.location.href = '/';
+            showResult(result.result, result.message);
+        })
     }
 </script>
 

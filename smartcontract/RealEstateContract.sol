@@ -12,7 +12,7 @@ contract RealEstateContract {
         address _seller;
         address _buyer;
         string _locationAddress;
-        uint8 _cointType;
+        uint8 _coinType;
         // 1 -> bitcoin 2 -> ethereum
         uint256 _price;
         Status _status;
@@ -26,7 +26,7 @@ contract RealEstateContract {
         info._title = title;
         info._seller = seller;
         info._locationAddress = locationAddress;
-        info._cointType = coinType;
+        info._coinType = coinType;
         info._price = price;
         info._status = Status.Trading;
         timestamp[statusToString(Status.Trading)] = now;
@@ -76,7 +76,7 @@ contract RealEstateContract {
     }
 
     function getCoinType() public view returns (uint8) {
-        return info._cointType;
+        return info._coinType;
     }
 
     function getPrice() public view returns (uint256) {
@@ -84,7 +84,7 @@ contract RealEstateContract {
     }
 
     function setCoinType(uint8 coinType) public onlySeller statusCompleted statusTerminated{
-        info._cointType = coinType;
+        info._coinType = coinType;
     }
 
     function setPrice(uint256 price) public onlySeller statusCompleted statusTerminated{
@@ -111,10 +111,28 @@ contract RealEstateContract {
         return timestamp[status];
     }
 
-    function updateStatus(uint8 status) public statusCompleted {
-        if(status == 0) info._status = Status.Trading;
-        if(status == 1) info._status = Status.Complete;
-        if(status == 2) info._status = Status.Terminated;
+    function updateStatus(uint8 status) public statusCompleted returns (uint8){
+        if(status == 0){
+            info._status = Status.Trading;
+            return 0;
+        } 
+        if(status == 1){
+            info._status = Status.Complete;
+            return 1;
+        } 
+        if(status == 2){
+            info._status = Status.Terminated;
+            return 2;
+        } 
+    }
+
+    function modify(string memory title,string memory locationAddress,uint8 coinType,uint256 price) public statusCompleted onlySeller {
+        info._title =title;
+        info._locationAddress =locationAddress;
+        info._title =title;
+        info._coinType = coinType;
+        info._price =price;
+        timestamp[statusToString(Status.Trading)] = now;
     }
 
     function purchase(uint256 price,address buyer) public statusCompleted statusTerminated{
@@ -124,5 +142,4 @@ contract RealEstateContract {
           timestamp[statusToString(Status.Complete)] = now;
         } 
     }
-
 }

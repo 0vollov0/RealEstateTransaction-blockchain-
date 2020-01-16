@@ -131,10 +131,9 @@ router.get('/info',function(req,res){
             data.mb_id = mb_id;
             data.mb_account = rows[0].mb_account;
             coin_contract.balanceOf(rows[0].mb_account,'1').then((amount)=>{
-                data.bit = amount;
+                data.btc = amount;
                 coin_contract.balanceOf(rows[0].mb_account,'2').then((amount)=>{
                     data.eth = amount;
-                    console.log(data);
                     res.render('member/info.ejs',data);
                 }).catch(console.log);
             }).catch(console.log);

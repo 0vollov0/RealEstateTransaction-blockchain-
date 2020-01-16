@@ -110,9 +110,12 @@
                 var tr = document.createElement("tr");
                 var td_1 = document.createElement("td");
                 var td_2 = document.createElement("td");
+                var a = document.createElement("a");
+                a.href = "/realestateExchange/detail?contract_address=" + element.realestate_ca;
                 td_1.innerText = element.realestate_ca;
                 td_2.innerText = element.realestate_ctx;
-                tr.append(td_1);
+                a.append(td_1);
+                tr.append(a);
                 tr.append(td_2);
                 tbody.append(tr);
             });
