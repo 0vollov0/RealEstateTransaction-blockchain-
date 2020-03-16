@@ -86,6 +86,25 @@
                 <a href="#">All updates</a>
             </small>
         </div>
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0">판매중지</h6>
+            <div>
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Seller</th>
+                            <th scope="col">Contract Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="terminated">
+                    </tbody>
+                </table>
+            </div>
+            <small class="d-block text-right mt-3">
+                <a href="#">All updates</a>
+            </small>
+        </div>
         </div>
     </main>
     <input type="hidden" name="mb_id_session" value="<%=mb_id%>">
@@ -98,6 +117,9 @@
         });
         getSellerAndCA(1).then((list) => {
             setList(list,'complete');
+        });
+        getSellerAndCA(2).then((list) => {
+            setList(list,'terminated');
         });
     })
 

@@ -58,6 +58,21 @@
         </div>
 
         <hr>
+        <h2>거래중지</h2>
+        <div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Contract Address</th>
+                        <th scope="col">Contract Transaction Hash</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction_terminated">
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
         <h2>대기중</h2>
         <div>
             <table class="table">
@@ -80,8 +95,10 @@
         //대기중 리스트
         getPendingList();
         //거래중 리스트
-        getList(1);
+        getList(0);
         //거래완료 리스트
+        getList(1);
+        //거래중지 리스트
         getList(2);
     })
 
@@ -97,11 +114,14 @@
             var tbody;
 
             switch (status) {
-                case 1:
+                case 0:
                     tbody = document.getElementById('trading');
                     break;
-                case 2:
+                case 1:
                     tbody = document.getElementById('transaction_completed');
+                    break;
+                case 2:
+                    tbody = document.getElementById('transaction_terminated');
                     break;
                 default:
                     break;
@@ -120,7 +140,7 @@
                 tbody.append(tr);
             });
 
-            if (status == 0) {
+            if (status == 3) {
                 result.forEach(element => {
                     var tr = document.createElement("tr");
                     var td_1 = document.createElement("td");

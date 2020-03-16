@@ -206,7 +206,8 @@ router.post('/purchase', (req, res) => {
     var coin_type = body.coin_type;
 
     contract.purchase(contract_address, price, buyer).then((result) => {
-        connection.query('update realestate set realestate_status = 2, realestate_buyer = ? where realestate_ca = ?', [buyer, contract_address], (err, rows) => {
+        console.log(result);
+        connection.query('update realestate set realestate_status = 1, realestate_buyer = ? where realestate_ca = ?', [buyer, contract_address], (err, rows) => {
             if (err) console.log(err)
             coin_contract.transferFrom(buyer, seller, price, coin_type).then((result) => {
                 if (result) {

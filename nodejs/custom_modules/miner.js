@@ -13,7 +13,7 @@ function miner_start() {
         })
     };
 
-    request(options, (error, response, body) => {
+    request(options, (error, res, body) => {
         if (error) {
             res.json(error);
             console.error('An error has occurred: ', error);

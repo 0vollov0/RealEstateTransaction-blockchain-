@@ -122,12 +122,12 @@ contract RealEstateContract {
         } 
         if(status == 2){
             info._status = Status.Terminated;
+            timestamp[statusToString(Status.Terminated)] = now;
             return 2;
         } 
     }
 
     function modify(string memory title,string memory locationAddress,uint8 coinType,uint256 price) public statusCompleted onlySeller {
-        info._title =title;
         info._locationAddress =locationAddress;
         info._title =title;
         info._coinType = coinType;
