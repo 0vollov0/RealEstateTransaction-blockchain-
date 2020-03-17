@@ -8,7 +8,7 @@ var logout = require('./member/logout')
 var member = require('./member/index')
 var coin = require('./coin/index')
 var realestateExchange = require('./realestateExchange/index')
-var web3 = require('./web3/index')
+//var web3 = require('./web3/index')
 
 //url routing
 router.get('/', function (req, res) {
@@ -26,7 +26,7 @@ router.use('/logout', logout)
 router.use('/coin', coin)
 router.use('/member',member)
 router.use('/realestateExchange',realestateExchange)
-router.use('/web3',web3)
+//router.use('/web3',web3)
 
 // router.use('/', express.static(__dirname + '/www')); // redirect root
 router.use('/js', express.static(__dirname + '../../node_modules/bootstrap/dist/js')); // redirect bootstrap JS

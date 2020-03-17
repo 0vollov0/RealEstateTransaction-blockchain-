@@ -15,6 +15,7 @@ const request = require('request');
 
 
 app.listen(8080, function () {
+    coin_update.crawling_coin_cost();
     console.log('localhost:8080 has been started');
 });
 

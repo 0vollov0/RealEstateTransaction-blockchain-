@@ -93,7 +93,7 @@ router.get('/my_realestate_list', (req, res) => {
     var mb_id = req.query.mb_id;
     var status = req.query.status;
     if (mb_id !== undefined) {
-        connection.query('select realestate_ca,realestate_ctx from realestate where realestate_seller = (select mb_account from member where mb_id = ?) AND realestate_status = ?', [mb_id, status], (err, rows) => {
+        connection.query('select realestate_ca,realestate_ctx from realestate where (realestate_seller = (select mb_account from member where mb_id = ?) OR realestate_buyer = (select mb_account from member where mb_id = ?)) AND realestate_status = ?', [mb_id, mb_id, status], (err, rows) => {
             if (err) {
                 result.result = 0;
                 result.message = '잘 못된 접근 방법입니다.';
@@ -246,7 +246,7 @@ router.get('/modify', (req, res) => {
 
         if (Number(seller) != Number(mb_account)) res.redirect('/');
         else res.render('realestateExchange/modify.ejs', {
-            'contract_address' : contract_address,
+            'contract_address': contract_address,
             'mb_id': mb_id,
             'mb_account': mb_account,
             'title': title,
@@ -263,7 +263,7 @@ router.get('/modify', (req, res) => {
 router.post('/modify', (req, res) => {
     var body = req.body;
     var result = {};
-    contract.modify(body.contract_address,body.seller, body.account_password,  body.title, body.locationAddress, body.coinType,body.price).then((transactionHash) => {
+    contract.modify(body.contract_address, body.seller, body.account_password, body.title, body.locationAddress, body.coinType, body.price).then((transactionHash) => {
         result.result = -1;
         result.realestate_ctx = transactionHash;
         res.json(result);
@@ -274,14 +274,14 @@ router.post('/modify', (req, res) => {
     })
 })
 
-router.post('/status',(req,res)=>{
+router.post('/status', (req, res) => {
     var body = req.body;
     var result = {};
 
-    contract.updateStatus(body.contract_address,body.status).then(()=>{
+    contract.updateStatus(body.contract_address, body.status).then(() => {
         result.result = true;
         res.json(result);
-    }).catch((err)=>{
+    }).catch((err) => {
         result.result = false;
         res.json(result);
     })

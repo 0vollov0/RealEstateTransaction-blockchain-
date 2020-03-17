@@ -189,6 +189,7 @@
 
         if (document.getElementById('stop')) {
             document.getElementById('stop').addEventListener('click',()=>{
+                if(!confirm('판매중지 하시겠습니까?')) return;
                 var data = {
                     'contract_address' : document.getElementById('contract_address').value,
                     'status' : 2
